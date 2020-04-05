@@ -2,6 +2,7 @@ html {
   box-sizing: border-box;
   --color-accent: #FEB062;
   --color-accent-alt: #CC00CC;
+  --color-accent-toxic: #05FFA6 ;
   --color-bg-alt: #2B0058;
   --color-area: #575151;
   --color-bg-soft: #2B2B2B;
@@ -15,10 +16,63 @@ html {
 body {
   padding: 0;
   margin: 0;
-  background: linear-gradient(-45deg, var(--color-accent-alt), var(--color-bg), var(--color-bg-alt), var(--color-bgsoft));
+  background: linear-gradient(-45deg, var(--color-accent-alt), var(--color-bg), var(--color-bg-alt), var(--color-bg-soft));
   background-size: 400% 400%;
   animation: gradient 15s ease-out infinite;
 }
+
+.wrapper {
+  margin: 0 auto;
+  padding-top: 10vh;
+  width: 60vw;
+  min-height: 100vh;
+}
+
+.field {
+  position: relative;
+  z-index: 1;
+  height: 60vw;
+  display: grid;
+  gap: 0.5vw;
+  padding: 0.5vw;
+  width: 100%;
+  background: linear-gradient(45deg, var(--color-accent-toxic), var(--color-accent), var(--color-accent-alt));
+  background-size: 400% 400%;
+  animation: gradient 10s ease infinite;
+  border-radius: 1vw;
+}
+
+.field_size_3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+.field_size_4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+.field_size_5 {
+  grid-template-columns: repeat(5, 1fr);
+}
+.field_size_6 {
+  grid-template-columns: repeat(6, 1fr);
+}
+.field_size_7 {
+  grid-template-columns: repeat(7, 1fr);
+}
+.field_size_8 {
+  grid-template-columns: repeat(8, 1fr);
+}
+
+.field__cell {
+  padding-top: 25%;
+  text-align: center;
+  font-size: 7vw;
+  font-weight: bold;
+  line-height: 1;
+  background-color: #2B0058;
+  border-radius: 0.5vw;
+  color: var(--color-accent);
+  user-select: none;
+}
+
 
 @keyframes gradient {
   0% {
