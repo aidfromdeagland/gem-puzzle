@@ -1,0 +1,15 @@
+{
+"extends": "airbnb-base",
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "rules": {
+    "import/extensions": ["error", "ignorePackages", {
+      "js": "always",
+      "mjs": "never",
+      "jsx": "never"
+    }],
+    "linebreak-style": ["off", "unix"]
+  }
+}
