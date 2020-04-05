@@ -1,6 +1,6 @@
-import Keyboard from './src/keyboard.js';
+import GemPuzzle from './src/gem-puzzle.js';
 
 window.addEventListener('load', () => {
-  const keyboard = new Keyboard();
-  keyboard.init();
+  const gemPuzzle = new GemPuzzle();
+  gemPuzzle.init();
 });
