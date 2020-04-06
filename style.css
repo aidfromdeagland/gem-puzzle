@@ -22,57 +22,86 @@ body {
 }
 
 .wrapper {
-  margin: 0 auto;
-  padding-top: 10vh;
-  width: 60vw;
-  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
 }
 
 .field {
-  position: relative;
-  z-index: 1;
-  height: 60vw;
+  margin: auto 0;
+  height: 80vw;
+  width: 80vw;
   display: grid;
   gap: 0.5vw;
   padding: 0.5vw;
-  width: 100%;
   background: linear-gradient(45deg, var(--color-accent-toxic), var(--color-accent), var(--color-accent-alt));
   background-size: 400% 400%;
   animation: gradient 10s ease infinite;
   border-radius: 1vw;
+  perspective: 50vw;
+  font-size: 7vw;
+  font-weight: bold;
+  line-height: 1;
 }
 
 .field_size_3 {
   grid-template-columns: repeat(3, 1fr);
+  font-size: 12vw;
 }
 .field_size_4 {
   grid-template-columns: repeat(4, 1fr);
+  font-size: 9vw;
 }
 .field_size_5 {
   grid-template-columns: repeat(5, 1fr);
+  font-size: 8vw;
 }
 .field_size_6 {
   grid-template-columns: repeat(6, 1fr);
+  font-size: 7vw;
 }
 .field_size_7 {
   grid-template-columns: repeat(7, 1fr);
+  font-size: 6vw;
 }
 .field_size_8 {
   grid-template-columns: repeat(8, 1fr);
+  font-size: 5vw;
 }
 
 .field__cell {
-  padding-top: 25%;
+  padding-top: calc(50% - 1em / 2);
   text-align: center;
-  font-size: 7vw;
-  font-weight: bold;
-  line-height: 1;
   background-color: #2B0058;
   border-radius: 0.5vw;
   color: var(--color-accent);
   user-select: none;
+  animation: swirl-in-bck 0.3s linear both;
+  transition: animation 0.5s, opacity 0.3s;
 }
 
+.field__cell_0 {
+  font-size: 0;
+  opacity: 0;
+  animation: none;
+  transition: animation 0.5s, opacity 0.3s;
+}
+
+
+
+@media (min-aspect-ratio: 1/1) {
+  .field {
+    height: 80vh;
+    width: 80vh;
+    gap: 0.5vh;
+    padding: 0.5vh;
+    border-radius: 1vh;
+    perspective: 50vh;
+    font-size: 7vh;
+  }
+}
 
 @keyframes gradient {
   0% {
@@ -83,5 +112,16 @@ body {
   }
   100% {
     background-position: 0 50%;
+  }
+}
+
+@keyframes swirl-in-bck {
+  0% {
+    transform: rotateY(-210deg);
+    opacity: 0;
+  }
+  100% {
+    transform: rotate(0);
+    opacity: 1;
   }
 }
