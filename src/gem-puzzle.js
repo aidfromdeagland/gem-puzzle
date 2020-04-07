@@ -92,32 +92,37 @@ class GemPuzzle {
         };
 
         const mouseUpHanler = function () {
+
+          if (cellsCollection[zeroIndex].classList.contains('field__cell_dropbox')) {
+            cellsCollection[zeroIndex].classList.remove('field__cell_dropbox');
+          }
+
           const targetCellInfo = cellsCollection[targetIndex].getBoundingClientRect();
           const targetCellCenter = {
             x: (targetCellInfo.left + targetCellInfo.right) / 2,
             y: (targetCellInfo.top + targetCellInfo.bottom) / 2,
           };
 
-          if (targetCellCenter.x > zeroCellInfo.left && targetCellCenter.x < zeroCellInfo.right
-            && targetCellCenter.y > zeroCellInfo.top && targetCellCenter.y < zeroCellInfo.bottom) {
-            if (cellsCollection[zeroIndex].classList.contains('field__cell_dropbox')) {
-              cellsCollection[zeroIndex].classList.remove('field__cell_dropbox');
-            }
+          if ((targetCellCenter.x > zeroCellInfo.left && targetCellCenter.x < zeroCellInfo.right
+            && targetCellCenter.y > zeroCellInfo.top && targetCellCenter.y < zeroCellInfo.bottom)
+          || (evt.target.style.left === '0px' && evt.target.style.top === '0px')) {
+            evt.target.classList.remove('field__cell_draggable');
+            evt.target.style.left = '';
+            evt.target.style.top = '';
             swapCells();
+          } else {
+            evt.target.classList.remove('field__cell_draggable');
+            evt.target.style.left = '';
+            evt.target.style.top = '';
           }
 
           document.removeEventListener('mousemove', mouseMoveHandler);
-          evt.target.classList.remove('field__cell_draggable');
-          evt.target.style.left = '';
-          evt.target.style.top = '';
+          document.removeEventListener('mouseup', mouseUpHanler);
         };
 
         document.addEventListener('mousemove', mouseMoveHandler);
 
-        document.addEventListener('mouseup', () => {
-          mouseUpHanler();
-          document.removeEventListener('mouseup', mouseUpHanler);
-        });
+        document.addEventListener('mouseup', mouseUpHanler);
       }
     });
   }

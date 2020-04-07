@@ -114,6 +114,7 @@ body {
 }
 
 .field__cell_draggable {
+  cursor: pointer;
   position: relative;
   z-index: 1;
 }
