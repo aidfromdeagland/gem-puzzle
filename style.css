@@ -1,5 +1,6 @@
 html {
   box-sizing: border-box;
+  font-family: "Courier New", sans-serif;
   --color-accent: #FEB062;
   --color-accent-alt: #CC00CC;
   --color-accent-toxic: #05FFA6 ;
@@ -32,10 +33,10 @@ body {
 }
 
 .info {
+  width: 80vw;
   margin-bottom: 3vw;
-  width: 100%;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   font-size: 6vw;
   font-weight: bold;
   line-height: 1;
@@ -43,12 +44,23 @@ body {
  }
 
 .info__timing, .info__counter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin: 0;
 }
 
+.info__timing {
+  width: 67%;
+}
+
+.info__counter {
+  width: 33%;
+}
+
 .info__duration, .info__moves {
+  display: block;
   font-size: 1em;
-  text-shadow: 0 0 10vw var(--color-accent-alt);
 }
 
 .field {
@@ -100,6 +112,7 @@ body {
   padding-top: calc(50% - 1em / 2);
   text-align: center;
   background-color: #2B0058;
+  border: 0.5vw solid var(--color-bg-soft);
   border-radius: 0.5vw;
   color: var(--color-accent);
   user-select: none;
@@ -110,6 +123,7 @@ body {
 .field__cell_0 {
   font-size: 0;
   background: transparent;
+  border-color: transparent;
   animation: none;
 }
 
@@ -117,6 +131,7 @@ body {
   cursor: pointer;
   position: relative;
   z-index: 1;
+  text-shadow: 0 0 1vw var(--color-accent);
 }
 
 .field__cell_dropbox {
@@ -138,8 +153,13 @@ body {
   }
 
   .info {
+    width: 80vh;
     margin-bottom: 3vh;
     font-size: 6vh;
+  }
+
+  .field__cell {
+    border-width: 0.5vh;
   }
 }
 
@@ -172,12 +192,25 @@ body {
     opacity: 0.8;
   }
   80% {
-    transform: scale(0.9);
+    transform: scale(0.8);
     opacity: 0;
   }
   100% {
-    transform: scale(1.4);
+    transform: scale(1);
     opacity: 0;
   }
 }
+
+@keyframes blink-1 {
+  0%,
+  50%,
+  100% {
+    color: var(--color-accent);
+  }
+  25%,
+  75% {
+    color: transparent;
+  }
+}
+
 

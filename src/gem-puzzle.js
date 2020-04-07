@@ -20,8 +20,8 @@ class GemPuzzle {
     wrapper.classList.add('wrapper');
     const info = document.createElement('div');
     info.classList.add('info');
-    info.innerHTML = '<p class="info__timing">time: <span class="info__duration">0</span></p>'
-      + '<p class="info__counter">moves: <span class="info__moves">0</span></p>';
+    info.innerHTML = '<p class="info__timing">time<span class="info__duration">0 : 0 : 0</span></p>'
+      + '<p class="info__counter">moves<span class="info__moves"> 0</span></p>';
     wrapper.appendChild(info);
     const field = document.createElement('div');
     field.classList.add('field');
@@ -30,6 +30,7 @@ class GemPuzzle {
     document.body.appendChild(wrapper);
     field.appendChild(this.drawCells());
     const cellsCollection = document.querySelectorAll('.field__cell');
+    const gameMoves = document.querySelector('info__moves');
     field.addEventListener('mousedown', (evt) => {
       const targetIndex = this.cells.indexOf(+evt.target.dataset.number);
       const zeroIndex = this.cells.indexOf(0);
@@ -49,7 +50,7 @@ class GemPuzzle {
         const temp = self.cells[targetIndex];
         self.cells[targetIndex] = self.cells[zeroIndex];
         self.cells[zeroIndex] = temp;
-        self.moves += 1;
+        self.movesCount();
 
         if (self.checkWin()) {
           console.log('pobeda');
@@ -103,9 +104,12 @@ class GemPuzzle {
             y: (targetCellInfo.top + targetCellInfo.bottom) / 2,
           };
 
-          if ((targetCellCenter.x > zeroCellInfo.left && targetCellCenter.x < zeroCellInfo.right
+          if (
+            (targetCellCenter.x > zeroCellInfo.left && targetCellCenter.x < zeroCellInfo.right
             && targetCellCenter.y > zeroCellInfo.top && targetCellCenter.y < zeroCellInfo.bottom)
-          || (evt.target.style.left === '0px' && evt.target.style.top === '0px')) {
+          || (Math.abs(+evt.target.style.left.slice(0, -2)) < 10
+            && Math.abs(+evt.target.style.top.slice(0, -2)) < 10)
+          ) {
             evt.target.classList.remove('field__cell_draggable');
             evt.target.style.left = '';
             evt.target.style.top = '';
@@ -121,10 +125,26 @@ class GemPuzzle {
         };
 
         document.addEventListener('mousemove', mouseMoveHandler);
-
         document.addEventListener('mouseup', mouseUpHanler);
       }
     });
+
+    this.startTime = new Date();
+    this.timer();
+  }
+
+  timer() {
+    const gameDuration = document.querySelector('.info__duration');
+    const timerId = setInterval(() => {
+      const timePassed = new Date((new Date() - this.startTime));
+      gameDuration.textContent = `${timePassed.getUTCHours()} : ${timePassed.getUTCMinutes()} : ${timePassed.getUTCSeconds()}`;
+    }, 1000);
+  }
+
+  movesCount() {
+    const gameMoves = document.querySelector('.info__moves');
+    this.moves += 1;
+    gameMoves.textContent = `${this.moves}`;
   }
 
   drawCells() {
