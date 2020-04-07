@@ -34,10 +34,10 @@ body {
 
 .info {
   width: 80vw;
-  margin-bottom: 3vw;
+  height: 10vw;
   display: flex;
   justify-content: space-between;
-  font-size: 6vw;
+  font-size: 5vw;
   font-weight: bold;
   line-height: 1;
   color: var(--color-accent);
@@ -141,6 +141,79 @@ body {
   animation: drop-target 0.8s ease-in-out infinite both;
 }
 
+.menu {
+  height: 10vw;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.menu > * {
+  margin: 0 1vw;
+}
+
+.menu__save {
+  width: 15%
+}
+
+.menu__new-game {
+  position: relative;
+  width: 70%;
+  height: 80%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 0.25vw solid var(--color-accent);
+  border-left-width: 0;
+  border-right-width: 0;
+  border-radius: 1vw;
+}
+
+.menu__new-game:before {
+  position: absolute;
+  content: "NEW GAME";
+  letter-spacing: 3vw;
+  word-spacing: 5vw;
+  width: 100%;
+  color: var(--color-accent-alt);
+  font-size: 5vw;
+  font-weight: bold;
+  text-shadow:  0 0 1vw var(--color-accent);
+  text-align: center;
+}
+
+.menu__new-game > .menu__button {
+  height: 80%;
+  margin: 0 0.5vw;
+}
+
+.menu__result {
+  width: 15%;
+}
+
+.menu__button {
+  position: relative;
+  flex-grow: 1;
+  padding: 0;
+  color: var(--color-accent);
+  font-family: inherit;
+  font-size: 2.5vw;
+  line-height: 1;
+  font-weight: bold;
+  border: 0.3vw solid var(--color-accent);
+  border-radius: 0.5vw;
+  background-color: rgba(200, 80, 200, 0.5);
+}
+
+.menu__button:hover {
+  background: var(--color-bg-alt);
+}
+
+.menu__button:active {
+  transform: scale(0.9);
+}
+
 @media (min-aspect-ratio: 1/1) {
   .field {
     height: 80vh;
@@ -153,13 +226,17 @@ body {
   }
 
   .info {
+    height: 10vh;
     width: 80vh;
-    margin-bottom: 3vh;
-    font-size: 6vh;
+    font-size: 5vh;
   }
 
   .field__cell {
     border-width: 0.5vh;
+  }
+
+  .menu {
+    height: 10vh;
   }
 }
 
