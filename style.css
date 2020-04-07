@@ -14,6 +14,7 @@ html {
 }
 
 body {
+  min-width: 320px;
   padding: 0;
   margin: 0;
   background: linear-gradient(-45deg, var(--color-accent-alt), var(--color-bg), var(--color-bg-alt), var(--color-bg-soft));
@@ -23,14 +24,34 @@ body {
 
 .wrapper {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 100vh;
 }
 
+.info {
+  margin-bottom: 3vw;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  font-size: 6vw;
+  font-weight: bold;
+  line-height: 1;
+  color: var(--color-accent);
+ }
+
+.info__timing, .info__counter {
+  margin: 0;
+}
+
+.info__duration, .info__moves {
+  font-size: 1em;
+  text-shadow: 0 0 10vw var(--color-accent-alt);
+}
+
 .field {
-  margin: auto 0;
   height: 80vw;
   width: 80vw;
   display: grid;
@@ -40,7 +61,7 @@ body {
   background-size: 400% 400%;
   animation: gradient 10s ease infinite;
   border-radius: 1vw;
-  perspective: 50vw;
+  perspective: 100vw;
   font-size: 7vw;
   font-weight: bold;
   line-height: 1;
@@ -72,6 +93,10 @@ body {
 }
 
 .field__cell {
+  z-index: auto;
+  position: static;
+  left: 0;
+  top: 0;
   padding-top: calc(50% - 1em / 2);
   text-align: center;
   background-color: #2B0058;
@@ -79,17 +104,26 @@ body {
   color: var(--color-accent);
   user-select: none;
   animation: swirl-in-bck 0.3s linear both;
-  transition: animation 0.5s, opacity 0.3s;
+  transition: animation 0.3s, opacity 0.3s;
 }
 
 .field__cell_0 {
   font-size: 0;
-  opacity: 0;
+  background: transparent;
   animation: none;
-  transition: animation 0.5s, opacity 0.3s;
 }
 
+.field__cell_draggable {
+  position: relative;
+  z-index: 1;
+}
 
+.field__cell_dropbox {
+  position: relative;
+  z-index: 2;
+  border: 1vw dashed var(--color-accent-alt);
+  animation: drop-target 0.8s ease-in-out infinite both;
+}
 
 @media (min-aspect-ratio: 1/1) {
   .field {
@@ -98,8 +132,13 @@ body {
     gap: 0.5vh;
     padding: 0.5vh;
     border-radius: 1vh;
-    perspective: 50vh;
+    perspective: 100vh;
     font-size: 7vh;
+  }
+
+  .info {
+    margin-bottom: 3vh;
+    font-size: 6vh;
   }
 }
 
@@ -125,3 +164,19 @@ body {
     opacity: 1;
   }
 }
+
+@keyframes drop-target {
+  0% {
+    transform: scale(0.2);
+    opacity: 0.8;
+  }
+  80% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
