@@ -13,17 +13,4 @@ function shuffle(array) {
   return arrCopy;
 }
 
-function getMatrix(size) {
-  const fieldMatrix = new Array(size);
-  for (let i = 0; i < fieldMatrix.length; i += 1) {
-    fieldMatrix[i] = new Array(size);
-    for (let j = 0; j < fieldMatrix[i].length; j += 1) {
-      fieldMatrix[i][j] = i * size + j + 1;
-    }
-  }
-  fieldMatrix[size - 1][size - 1] = 0;
-  return fieldMatrix;
-}
-
-export { getMatrix };
-export { shuffle };
+export default shuffle;

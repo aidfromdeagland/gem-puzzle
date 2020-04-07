@@ -1,4 +1,4 @@
-import { shuffle } from './utils.js';
+import shuffle from './utils.js';
 
 
 class GemPuzzle {
@@ -12,9 +12,17 @@ class GemPuzzle {
       this.cells.push(i);
     }
     this.cells = shuffle(this.cells);
+    this.moves = 0;
+
+    const self = this;
 
     const wrapper = document.createElement('div');
     wrapper.classList.add('wrapper');
+    const info = document.createElement('div');
+    info.classList.add('info');
+    info.innerHTML = '<p class="info__timing">time: <span class="info__duration">0</span></p>'
+      + '<p class="info__counter">moves: <span class="info__moves">0</span></p>';
+    wrapper.appendChild(info);
     const field = document.createElement('div');
     field.classList.add('field');
     field.classList.add(`field_size_${this.size}`);
@@ -22,17 +30,11 @@ class GemPuzzle {
     document.body.appendChild(wrapper);
     field.appendChild(this.drawCells());
     const cellsCollection = document.querySelectorAll('.field__cell');
-    field.addEventListener('click', (evt) => {
+    field.addEventListener('mousedown', (evt) => {
       const targetIndex = this.cells.indexOf(+evt.target.dataset.number);
       const zeroIndex = this.cells.indexOf(0);
-      if (evt.target.classList.contains('field__cell')
-        && ((targetIndex === zeroIndex + 1
-          && Math.floor(targetIndex / this.size) === Math.floor(zeroIndex / this.size))
-        || (targetIndex === zeroIndex - 1
-            && Math.floor(targetIndex / this.size) === Math.floor(zeroIndex / this.size))
-        || targetIndex === zeroIndex + this.size
-        || targetIndex === zeroIndex - this.size)
-      ) {
+
+      const swapCells = function() {
         const tempValue = cellsCollection[targetIndex].dataset.number;
         const tempClass = cellsCollection[targetIndex].className;
 
@@ -44,13 +46,78 @@ class GemPuzzle {
         cellsCollection[zeroIndex].textContent = tempValue;
         cellsCollection[zeroIndex].className = tempClass;
 
-        const temp = this.cells[targetIndex];
-        this.cells[targetIndex] = this.cells[zeroIndex];
-        this.cells[zeroIndex] = temp;
+        const temp = self.cells[targetIndex];
+        self.cells[targetIndex] = self.cells[zeroIndex];
+        self.cells[zeroIndex] = temp;
+        self.moves += 1;
 
-        if (this.checkWin()) {
+        if (self.checkWin()) {
           console.log('pobeda');
         }
+      };
+
+      if (evt.target.classList.contains('field__cell')
+        && ((targetIndex === zeroIndex + 1
+          && Math.floor(targetIndex / this.size) === Math.floor(zeroIndex / this.size))
+        || (targetIndex === zeroIndex - 1
+            && Math.floor(targetIndex / this.size) === Math.floor(zeroIndex / this.size))
+        || targetIndex === zeroIndex + this.size
+        || targetIndex === zeroIndex - this.size)
+      ) {
+        const zeroCellInfo = cellsCollection[zeroIndex].getBoundingClientRect();
+        evt.target.classList.add('field__cell_draggable');
+        evt.target.style.left = `${0}px`;
+        evt.target.style.top = `${0}px`;
+
+        const mouseMoveHandler = function (moveEvt) {
+          moveEvt.preventDefault();
+
+          evt.target.style.left = `${+evt.target.style.left.slice(0, -2) + moveEvt.movementX}px`;
+          evt.target.style.top = `${+evt.target.style.top.slice(0, -2) + moveEvt.movementY}px`;
+
+          const targetCellInfo = cellsCollection[targetIndex].getBoundingClientRect();
+          const targetCellCenter = {
+            x: (targetCellInfo.left + targetCellInfo.right) / 2,
+            y: (targetCellInfo.top + targetCellInfo.bottom) / 2,
+          };
+
+          if (targetCellCenter.x > zeroCellInfo.left && targetCellCenter.x < zeroCellInfo.right
+          && targetCellCenter.y > zeroCellInfo.top && targetCellCenter.y < zeroCellInfo.bottom) {
+            if (!cellsCollection[zeroIndex].classList.contains('field__cell_dropbox')) {
+              cellsCollection[zeroIndex].classList.add('field__cell_dropbox');
+            }
+          } else if (cellsCollection[zeroIndex].classList.contains('field__cell_dropbox')) {
+            cellsCollection[zeroIndex].classList.remove('field__cell_dropbox');
+          }
+        };
+
+        const mouseUpHanler = function () {
+          const targetCellInfo = cellsCollection[targetIndex].getBoundingClientRect();
+          const targetCellCenter = {
+            x: (targetCellInfo.left + targetCellInfo.right) / 2,
+            y: (targetCellInfo.top + targetCellInfo.bottom) / 2,
+          };
+
+          if (targetCellCenter.x > zeroCellInfo.left && targetCellCenter.x < zeroCellInfo.right
+            && targetCellCenter.y > zeroCellInfo.top && targetCellCenter.y < zeroCellInfo.bottom) {
+            if (cellsCollection[zeroIndex].classList.contains('field__cell_dropbox')) {
+              cellsCollection[zeroIndex].classList.remove('field__cell_dropbox');
+            }
+            swapCells();
+          }
+
+          document.removeEventListener('mousemove', mouseMoveHandler);
+          evt.target.classList.remove('field__cell_draggable');
+          evt.target.style.left = '';
+          evt.target.style.top = '';
+        };
+
+        document.addEventListener('mousemove', mouseMoveHandler);
+
+        document.addEventListener('mouseup', () => {
+          mouseUpHanler();
+          document.removeEventListener('mouseup', mouseUpHanler);
+        });
       }
     });
   }
