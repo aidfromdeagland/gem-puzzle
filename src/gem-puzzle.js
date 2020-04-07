@@ -2,19 +2,14 @@ import shuffle from './utils.js';
 
 
 class GemPuzzle {
-  constructor() {
-    this.size = 4;
-  }
-
-  init() {
+  init(size = 4) {
+    this.size = size;
     this.cells = [];
     for (let i = 0; i < this.size ** 2; i += 1) {
       this.cells.push(i);
     }
-    this.cells = shuffle(this.cells);
+    /*this.cells = shuffle(this.cells);*/
     this.moves = 0;
-
-    const self = this;
 
     const wrapper = document.createElement('div');
     wrapper.classList.add('wrapper');
@@ -27,15 +22,25 @@ class GemPuzzle {
     field.classList.add('field');
     field.classList.add(`field_size_${this.size}`);
     wrapper.appendChild(field);
+    const menu = document.createElement('div');
+    menu.classList.add('menu');
+    menu.innerHTML = '<button class="menu__button menu__button_save">save</button>'
+      + '<div class="menu__new-game"><button class="menu__button menu__button_restart">retry</button>'
+      + '<button class="menu__button menu__button_start3">3x3</button><button class="menu__button menu__button_start4">4x4</button>'
+      + '<button class="menu__button menu__button_start5">5x5</button><button class="menu__button menu__button_start6">6x6</button>'
+      + '<button class="menu__button menu__button_start7">7x7</button><button class="menu__button menu__button_start8">8x8</button>'
+      + '</div>'
+      + '<button class="menu__button menu__button_results">results</button>';
+    wrapper.appendChild(menu);
     document.body.appendChild(wrapper);
     field.appendChild(this.drawCells());
     const cellsCollection = document.querySelectorAll('.field__cell');
-    const gameMoves = document.querySelector('info__moves');
     field.addEventListener('mousedown', (evt) => {
+
       const targetIndex = this.cells.indexOf(+evt.target.dataset.number);
       const zeroIndex = this.cells.indexOf(0);
 
-      const swapCells = function() {
+      const swapCells = () => {
         const tempValue = cellsCollection[targetIndex].dataset.number;
         const tempClass = cellsCollection[targetIndex].className;
 
@@ -47,23 +52,26 @@ class GemPuzzle {
         cellsCollection[zeroIndex].textContent = tempValue;
         cellsCollection[zeroIndex].className = tempClass;
 
-        const temp = self.cells[targetIndex];
-        self.cells[targetIndex] = self.cells[zeroIndex];
-        self.cells[zeroIndex] = temp;
-        self.movesCount();
+        const temp = this.cells[targetIndex];
+        this.cells[targetIndex] = this.cells[zeroIndex];
+        this.cells[zeroIndex] = temp;
+        this.movesCount();
 
-        if (self.checkWin()) {
-          console.log('pobeda');
+        if (this.checkWin()) {
+          const passedTime = new Date(new Date() - this.startTime);
+          alert(`Congrats! You solved this puzzle in ${passedTime.getUTCMinutes()} minutes, ${passedTime.getUTCSeconds()} seconds and ${this.moves} moves`);
+          this.redraw(this.size);
         }
       };
 
       if (evt.target.classList.contains('field__cell')
+        && evt.button === 0
         && ((targetIndex === zeroIndex + 1
           && Math.floor(targetIndex / this.size) === Math.floor(zeroIndex / this.size))
-        || (targetIndex === zeroIndex - 1
+          || (targetIndex === zeroIndex - 1
             && Math.floor(targetIndex / this.size) === Math.floor(zeroIndex / this.size))
-        || targetIndex === zeroIndex + this.size
-        || targetIndex === zeroIndex - this.size)
+          || targetIndex === zeroIndex + this.size
+          || targetIndex === zeroIndex - this.size)
       ) {
         const zeroCellInfo = cellsCollection[zeroIndex].getBoundingClientRect();
         evt.target.classList.add('field__cell_draggable');
@@ -83,7 +91,7 @@ class GemPuzzle {
           };
 
           if (targetCellCenter.x > zeroCellInfo.left && targetCellCenter.x < zeroCellInfo.right
-          && targetCellCenter.y > zeroCellInfo.top && targetCellCenter.y < zeroCellInfo.bottom) {
+            && targetCellCenter.y > zeroCellInfo.top && targetCellCenter.y < zeroCellInfo.bottom) {
             if (!cellsCollection[zeroIndex].classList.contains('field__cell_dropbox')) {
               cellsCollection[zeroIndex].classList.add('field__cell_dropbox');
             }
@@ -92,8 +100,7 @@ class GemPuzzle {
           }
         };
 
-        const mouseUpHanler = function () {
-
+        const mouseUpHandler = function () {
           if (cellsCollection[zeroIndex].classList.contains('field__cell_dropbox')) {
             cellsCollection[zeroIndex].classList.remove('field__cell_dropbox');
           }
@@ -106,8 +113,8 @@ class GemPuzzle {
 
           if (
             (targetCellCenter.x > zeroCellInfo.left && targetCellCenter.x < zeroCellInfo.right
-            && targetCellCenter.y > zeroCellInfo.top && targetCellCenter.y < zeroCellInfo.bottom)
-          || (Math.abs(+evt.target.style.left.slice(0, -2)) < 10
+              && targetCellCenter.y > zeroCellInfo.top && targetCellCenter.y < zeroCellInfo.bottom)
+            || (Math.abs(+evt.target.style.left.slice(0, -2)) < 10
             && Math.abs(+evt.target.style.top.slice(0, -2)) < 10)
           ) {
             evt.target.classList.remove('field__cell_draggable');
@@ -121,11 +128,45 @@ class GemPuzzle {
           }
 
           document.removeEventListener('mousemove', mouseMoveHandler);
-          document.removeEventListener('mouseup', mouseUpHanler);
+          document.removeEventListener('mouseup', mouseUpHandler);
         };
 
         document.addEventListener('mousemove', mouseMoveHandler);
-        document.addEventListener('mouseup', mouseUpHanler);
+        document.addEventListener('mouseup', mouseUpHandler);
+      }
+    });
+
+    menu.addEventListener('click', (evt) => {
+      switch (evt.target) {
+        case document.querySelector('.menu__button_save'):
+          console.log('SAVE');
+          break;
+        case document.querySelector('.menu__button_results'):
+          console.log('RESULTS');
+          break;
+        case document.querySelector('.menu__button_restart'):
+          this.redraw(this.size);
+          break;
+        case document.querySelector('.menu__button_start3'):
+          this.redraw(3);
+          break;
+        case document.querySelector('.menu__button_start4'):
+          this.redraw(4);
+          break;
+        case document.querySelector('.menu__button_start5'):
+          this.redraw(5);
+          break;
+        case document.querySelector('.menu__button_start6'):
+          this.redraw(6);
+          break;
+        case document.querySelector('.menu__button_start7'):
+          this.redraw(7);
+          break;
+        case document.querySelector('.menu__button_start8'):
+          this.redraw(8);
+          break;
+        default:
+          break;
       }
     });
 
@@ -159,9 +200,9 @@ class GemPuzzle {
     return fragment;
   }
 
-  redraw() {
+  redraw(size) {
     document.body.removeChild(document.querySelector('.wrapper'));
-    this.init();
+    this.init(size);
   }
 
   checkWin() {
