@@ -15,6 +15,16 @@ class GemPuzzle {
     this.moves = moves;
     this.startTime = startTime;
 
+    if (localStorage.getItem('leaders')) {
+      this.leaders = JSON.parse(localStorage.getItem('leaders'));
+    } else {
+      this.leaders = {
+        names: ['God', 'Flash', 'A. Einstein', 'M. Schumacher', 'HOCKEY', 'TRACTOR', 'SAUNA', '50 GRAM', 'Chay s malinovym vareniem', 'Goose'],
+        results: [1, 2, 4, 5, 23, 42, 88, 652, 987, 1234],
+      };
+      localStorage.setItem('leaders', JSON.stringify(this.leaders));
+    }
+
 
     const wrapper = document.createElement('div');
     wrapper.classList.add('wrapper');
@@ -165,7 +175,11 @@ class GemPuzzle {
           }
           break;
         case document.querySelector('.menu__button_results'):
-          console.log('RESULTS');
+          let alertString = '';
+          for (let i = 0; i < this.leaders.results.length; i += 1) {
+            alertString += `${i + 1}) ${Math.floor(+this.leaders.results[i] / 60)} : ${Math.floor(+this.leaders.results[i] % 60)}  - ${this.leaders.names[i]} \n`;
+          }
+          alert(alertString);
           break;
         case document.querySelector('.menu__button_restart'):
           this.redraw(this.size);

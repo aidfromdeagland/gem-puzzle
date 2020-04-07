@@ -211,10 +211,10 @@ body {
   padding: 0;
   color: var(--color-accent);
   font-family: inherit;
-  font-size: 2.5vw;
+  font-size: 2vw;
   line-height: 1;
   font-weight: bold;
-  border: 0.3vw solid var(--color-accent);
+  border: 0.15vw solid var(--color-accent);
   border-radius: 0.5vw;
   background-color: rgba(200, 80, 200, 0.3);
 }
@@ -251,56 +251,46 @@ body {
   .menu {
     height: 10vh;
   }
-}
 
-@keyframes gradient {
-  0% {
-    background-position: 0 50%;
+  .menu__button {
+    font-size: 2.5vh;
   }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0 50%;
-  }
-}
 
-@keyframes swirl-in-bck {
-  0% {
-    transform: rotateY(-210deg);
-    opacity: 0;
+  @keyframes gradient {
+    0% {
+      background-position: 0 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0 50%;
+    }
   }
-  100% {
-    transform: rotate(0);
-    opacity: 1;
-  }
-}
 
-@keyframes drop-target {
-  0% {
-    transform: scale(0.2);
-    opacity: 0.8;
+  @keyframes swirl-in-bck {
+    0% {
+      transform: rotateY(-210deg);
+      opacity: 0;
+    }
+    100% {
+      transform: rotate(0);
+      opacity: 1;
+    }
   }
-  80% {
-    transform: scale(0.8);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 0;
-  }
-}
 
-@keyframes blink-1 {
-  0%,
-  50%,
-  100% {
-    color: var(--color-accent);
-  }
-  25%,
-  75% {
-    color: transparent;
+  @keyframes drop-target {
+    0% {
+      transform: scale(0.2);
+      opacity: 0.8;
+    }
+    80% {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 0;
+    }
   }
 }
-
-
