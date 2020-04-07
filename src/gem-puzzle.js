@@ -2,21 +2,26 @@ import shuffle from './utils.js';
 
 
 class GemPuzzle {
-  init(size = 4) {
+  init(size = 4, cells = [], moves = 0, startTime = new Date()) {
     this.size = size;
-    this.cells = [];
-    for (let i = 0; i < this.size ** 2; i += 1) {
-      this.cells.push(i);
+    this.cells = cells;
+
+    if (!cells.length) {
+      for (let i = 0; i < this.size ** 2; i += 1) {
+        this.cells.push(i);
+      }
+      this.cells = shuffle(this.cells);
     }
-    /*this.cells = shuffle(this.cells);*/
-    this.moves = 0;
+    this.moves = moves;
+    this.startTime = startTime;
+
 
     const wrapper = document.createElement('div');
     wrapper.classList.add('wrapper');
     const info = document.createElement('div');
     info.classList.add('info');
-    info.innerHTML = '<p class="info__timing">time<span class="info__duration">0 : 0 : 0</span></p>'
-      + '<p class="info__counter">moves<span class="info__moves"> 0</span></p>';
+    info.innerHTML = '<p class="info__timing">time<span class="info__duration">00 : 00</span></p>'
+      + `<p class="info__counter">moves<span class="info__moves">${this.moves}</span></p>`;
     wrapper.appendChild(info);
     const field = document.createElement('div');
     field.classList.add('field');
@@ -24,7 +29,8 @@ class GemPuzzle {
     wrapper.appendChild(field);
     const menu = document.createElement('div');
     menu.classList.add('menu');
-    menu.innerHTML = '<button class="menu__button menu__button_save">save</button>'
+    menu.innerHTML = '<div class="menu__saveload"><button class="menu__button menu__button_save">save</button>'
+      + '<button class="menu__button menu__button_load">load</button></div>'
       + '<div class="menu__new-game"><button class="menu__button menu__button_restart">retry</button>'
       + '<button class="menu__button menu__button_start3">3x3</button><button class="menu__button menu__button_start4">4x4</button>'
       + '<button class="menu__button menu__button_start5">5x5</button><button class="menu__button menu__button_start6">6x6</button>'
@@ -139,7 +145,24 @@ class GemPuzzle {
     menu.addEventListener('click', (evt) => {
       switch (evt.target) {
         case document.querySelector('.menu__button_save'):
-          console.log('SAVE');
+          localStorage.setItem('savedGame', JSON.stringify({
+            size: this.size,
+            time: new Date((new Date() - this.startTime)),
+            moves: this.moves,
+            matrix: this.cells.slice(),
+          }));
+          break;
+        case document.querySelector('.menu__button_load'):
+          if (localStorage.getItem('savedGame')) {
+            const quest = confirm('Would uou like to load last saved game?');
+            if (quest) {
+              const savedGame = JSON.parse(localStorage.getItem('savedGame'));
+              const savedDate = new Date(new Date() - new Date(savedGame.time));
+              this.redraw(savedGame.size, savedGame.matrix, savedGame.moves, savedDate);
+            }
+          } else {
+            alert('Sorry, there is no any saved game');
+          }
           break;
         case document.querySelector('.menu__button_results'):
           console.log('RESULTS');
@@ -170,15 +193,18 @@ class GemPuzzle {
       }
     });
 
-    this.startTime = new Date();
     this.timer();
   }
 
   timer() {
     const gameDuration = document.querySelector('.info__duration');
-    const timerId = setInterval(() => {
+    setInterval(() => {
       const timePassed = new Date((new Date() - this.startTime));
-      gameDuration.textContent = `${timePassed.getUTCHours()} : ${timePassed.getUTCMinutes()} : ${timePassed.getUTCSeconds()}`;
+      gameDuration.textContent = `${timePassed.getUTCMinutes() < 10
+        ? `0${timePassed.getUTCMinutes()}`
+        : timePassed.getUTCMinutes()} : ${timePassed.getUTCSeconds() < 10
+        ? `0${timePassed.getUTCSeconds()}`
+        : timePassed.getUTCSeconds()}`;
     }, 1000);
   }
 
@@ -200,9 +226,9 @@ class GemPuzzle {
     return fragment;
   }
 
-  redraw(size) {
+  redraw(size, cells, moves, startTime) {
     document.body.removeChild(document.querySelector('.wrapper'));
-    this.init(size);
+    this.init(size, cells, moves, startTime);
   }
 
   checkWin() {

@@ -3,7 +3,7 @@ html {
   font-family: "Courier New", sans-serif;
   --color-accent: #FEB062;
   --color-accent-alt: #CC00CC;
-  --color-accent-toxic: #05FFA6 ;
+  --color-accent-toxic: #05FFA6;
   --color-bg-alt: #2B0058;
   --color-area: #575151;
   --color-bg-soft: #2B2B2B;
@@ -41,7 +41,7 @@ body {
   font-weight: bold;
   line-height: 1;
   color: var(--color-accent);
- }
+}
 
 .info__timing, .info__counter {
   display: flex;
@@ -83,22 +83,27 @@ body {
   grid-template-columns: repeat(3, 1fr);
   font-size: 12vw;
 }
+
 .field_size_4 {
   grid-template-columns: repeat(4, 1fr);
   font-size: 9vw;
 }
+
 .field_size_5 {
   grid-template-columns: repeat(5, 1fr);
   font-size: 8vw;
 }
+
 .field_size_6 {
   grid-template-columns: repeat(6, 1fr);
   font-size: 7vw;
 }
+
 .field_size_7 {
   grid-template-columns: repeat(7, 1fr);
   font-size: 6vw;
 }
+
 .field_size_8 {
   grid-template-columns: repeat(8, 1fr);
   font-size: 5vw;
@@ -153,8 +158,16 @@ body {
   margin: 0 1vw;
 }
 
-.menu__save {
+.menu__saveload {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  align-items: stretch;
   width: 15%
+}
+
+.menu__button_save, .menu__button_load {
+  width: 100%;
 }
 
 .menu__new-game {
@@ -179,7 +192,7 @@ body {
   color: var(--color-accent-alt);
   font-size: 5vw;
   font-weight: bold;
-  text-shadow:  0 0 1vw var(--color-accent);
+  text-shadow: 0 0 1vw var(--color-accent);
   text-align: center;
 }
 
@@ -203,7 +216,7 @@ body {
   font-weight: bold;
   border: 0.3vw solid var(--color-accent);
   border-radius: 0.5vw;
-  background-color: rgba(200, 80, 200, 0.5);
+  background-color: rgba(200, 80, 200, 0.3);
 }
 
 .menu__button:hover {
