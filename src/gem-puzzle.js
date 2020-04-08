@@ -22,13 +22,10 @@ class GemPuzzle {
       this.leaders = JSON.parse(localStorage.getItem('leaders'));
     } else {
       this.leaders = [
-        {name: 'God', result: 1}, {name: 'Flash', result: 2}, {name: 'A. Einstein', result: 3}, {
-          name: 'M. Schumacher',
-          result: 4,
-        }, {name: 'HOCKEY', result: 68}, {name: 'TRACTOR', result: 162}, {name: 'SAUNA', result: 289}, {
-          name: '50 GRAM',
-          result: 1440,
-        }, {name: 'Chay s malinovym vareniem', result: 4200}, {name: 'Slowpoke', result: 9999},
+        { name: 'God', result: 1 }, { name: 'Flash', result: 2 }, { name: 'A. Einstein', result: 3 },
+        { name: 'M. Schumacher', result: 4 }, { name: 'HOCKEY', result: 68 }, { name: 'TRACTOR', result: 162 },
+        { name: 'SAUNA', result: 289 }, { name: '50 GRAM', result: 1275 }, { name: 'Chay s malinovym vareniem', result: 4200 },
+        { name: 'Slowpoke', result: 1234 },
       ];
       localStorage.setItem('leaders', JSON.stringify(this.leaders));
     }
@@ -83,10 +80,10 @@ class GemPuzzle {
         if (this.checkWin()) {
           const passedTime = Math.floor(new Date(new Date() - this.startTime).getTime() / 1000);
           alert(`Congrats! You solved this puzzle in ${Math.floor(passedTime / 60)} minutes, ${Math.floor(passedTime % 60)} seconds and ${this.moves} moves`);
-          if (Math.floor(passedTime) < this.leaders[9].result) {
+          if (Math.floor(passedTime) < this.leaders[this.leaders.length - 1].result) {
             const newLeader = prompt('You hit the leaderboard! Please, enter your name', 'Mr. Champion');
             if (newLeader.length > 0) {
-              const leaderToAdd = {name: newLeader, result: passedTime};
+              const leaderToAdd = { name: newLeader, result: passedTime };
               this.leaders.push(leaderToAdd);
               this.leaders.sort((a, b) => a.result - b.result);
               this.leaders = this.leaders.slice(0, 10);
