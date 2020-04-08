@@ -10,18 +10,26 @@ class GemPuzzle {
       for (let i = 0; i < this.size ** 2; i += 1) {
         this.cells.push(i);
       }
-      this.cells = shuffle(this.cells);
+
+      if (!this.easyMode) this.cells = shuffle(this.cells);
     }
+
+    this.easyMode = false;
     this.moves = moves;
     this.startTime = startTime;
 
     if (localStorage.getItem('leaders')) {
       this.leaders = JSON.parse(localStorage.getItem('leaders'));
     } else {
-      this.leaders = {
-        names: ['God', 'Flash', 'A. Einstein', 'M. Schumacher', 'HOCKEY', 'TRACTOR', 'SAUNA', '50 GRAM', 'Chay s malinovym vareniem', 'Goose'],
-        results: [1, 2, 4, 5, 23, 42, 88, 652, 987, 1234],
-      };
+      this.leaders = [
+        {name: 'God', result: 1}, {name: 'Flash', result: 2}, {name: 'A. Einstein', result: 3}, {
+          name: 'M. Schumacher',
+          result: 4,
+        }, {name: 'HOCKEY', result: 68}, {name: 'TRACTOR', result: 162}, {name: 'SAUNA', result: 289}, {
+          name: '50 GRAM',
+          result: 1440,
+        }, {name: 'Chay s malinovym vareniem', result: 4200}, {name: 'Slowpoke', result: 9999},
+      ];
       localStorage.setItem('leaders', JSON.stringify(this.leaders));
     }
 
@@ -41,7 +49,7 @@ class GemPuzzle {
     menu.classList.add('menu');
     menu.innerHTML = '<div class="menu__saveload"><button class="menu__button menu__button_save">save</button>'
       + '<button class="menu__button menu__button_load">load</button></div>'
-      + '<div class="menu__new-game"><button class="menu__button menu__button_restart">retry</button>'
+      + '<div class="menu__new-game"><button class="menu__button menu__button_restart">retry</button><button class="menu__button menu__button_easyMode">easy</button>'
       + '<button class="menu__button menu__button_start3">3x3</button><button class="menu__button menu__button_start4">4x4</button>'
       + '<button class="menu__button menu__button_start5">5x5</button><button class="menu__button menu__button_start6">6x6</button>'
       + '<button class="menu__button menu__button_start7">7x7</button><button class="menu__button menu__button_start8">8x8</button>'
@@ -52,7 +60,6 @@ class GemPuzzle {
     field.appendChild(this.drawCells());
     const cellsCollection = document.querySelectorAll('.field__cell');
     field.addEventListener('mousedown', (evt) => {
-
       const targetIndex = this.cells.indexOf(+evt.target.dataset.number);
       const zeroIndex = this.cells.indexOf(0);
 
@@ -74,8 +81,19 @@ class GemPuzzle {
         this.movesCount();
 
         if (this.checkWin()) {
-          const passedTime = new Date(new Date() - this.startTime);
-          alert(`Congrats! You solved this puzzle in ${passedTime.getUTCMinutes()} minutes, ${passedTime.getUTCSeconds()} seconds and ${this.moves} moves`);
+          const passedTime = Math.floor(new Date(new Date() - this.startTime).getTime() / 1000);
+          alert(`Congrats! You solved this puzzle in ${Math.floor(passedTime / 60)} minutes, ${Math.floor(passedTime % 60)} seconds and ${this.moves} moves`);
+          if (Math.floor(passedTime) < this.leaders[9].result) {
+            const newLeader = prompt('You hit the leaderboard! Please, enter your name', 'Mr. Champion');
+            if (newLeader.length > 0) {
+              const leaderToAdd = {name: newLeader, result: passedTime};
+              this.leaders.push(leaderToAdd);
+              this.leaders.sort((a, b) => a.result - b.result);
+              this.leaders = this.leaders.slice(0, 10);
+              localStorage.removeItem('leaders');
+              localStorage.setItem('leaders', JSON.stringify(this.leaders));
+            }
+          }
           this.redraw(this.size);
         }
       };
@@ -176,12 +194,16 @@ class GemPuzzle {
           break;
         case document.querySelector('.menu__button_results'):
           let alertString = '';
-          for (let i = 0; i < this.leaders.results.length; i += 1) {
-            alertString += `${i + 1}) ${Math.floor(+this.leaders.results[i] / 60)} : ${Math.floor(+this.leaders.results[i] % 60)}  - ${this.leaders.names[i]} \n`;
+          for (let i = 0; i < this.leaders.length; i += 1) {
+            alertString += `${i + 1}) ${Math.floor(this.leaders[i].result / 60)} : ${Math.floor(this.leaders[i].result % 60)}  - ${this.leaders[i].name} \n`;
           }
           alert(alertString);
           break;
         case document.querySelector('.menu__button_restart'):
+          this.redraw(this.size);
+          break;
+        case document.querySelector('.menu__button_easyMode'):
+          this.easyMode = true;
           this.redraw(this.size);
           break;
         case document.querySelector('.menu__button_start3'):
