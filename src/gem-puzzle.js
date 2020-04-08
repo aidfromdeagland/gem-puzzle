@@ -24,11 +24,13 @@ class GemPuzzle {
       this.leaders = [
         { name: 'God', result: 1 }, { name: 'Flash', result: 2 }, { name: 'A. Einstein', result: 3 },
         { name: 'M. Schumacher', result: 4 }, { name: 'HOCKEY', result: 68 }, { name: 'TRACTOR', result: 162 },
-        { name: 'SAUNA', result: 289 }, { name: '50 GRAM', result: 1275 }, { name: 'Chay s malinovym vareniem', result: 4200 },
-        { name: 'Slowpoke', result: 1234 },
+        { name: 'SAUNA', result: 289 }, { name: '50 GRAM', result: 1275 }, { name: 'Chay s malinovym vareniem', result: 2465 },
+        { name: 'Slowpoke', result: 2674 },
       ];
       localStorage.setItem('leaders', JSON.stringify(this.leaders));
     }
+
+    this.leaders = this.leaders.sort((a, b) => a.result - b.result);
 
 
     const wrapper = document.createElement('div');
