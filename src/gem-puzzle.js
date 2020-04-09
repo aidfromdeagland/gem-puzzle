@@ -267,7 +267,7 @@ class GemPuzzle {
   }
 
   checkWin() {
-    for (let i = 0; i < this.cells.length - 1; i += 1) {
+    for (let i = 0; i < this.cells.length - 2; i += 1) {
       if (this.cells[i] !== this.cells[i + 1] - 1) return false;
     }
     return true;
